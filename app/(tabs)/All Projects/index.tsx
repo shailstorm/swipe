@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Text, View } from "react-native";
-import { supabase } from "../../lib/supabase";
+import { supabase } from "../../../lib/supabase";
 
-export default function Projects() {
+export default function AllProjectsScreen() {
   const [projects, setProjects] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<null | string>(null);
