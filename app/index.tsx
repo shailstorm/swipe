@@ -7,11 +7,11 @@ export default function Index() {
 
   useEffect(() => {
     if (!isLoading) {
-      // if (session) {
-      router.replace("/(tabs)/feed");
-      // } else {
-      //   router.replace("/Auth");
-      // }
+      if (session) {
+        router.replace("/(tabs)/feed");
+      } else {
+        router.replace("/Auth");
+      }
     }
   }, [isLoading, session]);
 
