@@ -1,3 +1,4 @@
+import { ThemedText } from "@/components/ThemedText";
 import React, { useEffect, useState } from "react";
 import { Text, View } from "react-native";
 import { supabase } from "../../../lib/supabase";
@@ -26,8 +27,9 @@ export default function AllProjectsScreen() {
 
   return (
     <View className="flex-1 justify-center bg-white">
+      <ThemedText>total projects: {projects.length}</ThemedText>
       {projects.map((project) => (
-        <Text key={project.id}>{project.title}</Text>
+        <ThemedText key={project.id}>{project.title}</ThemedText>
       ))}
     </View>
   );

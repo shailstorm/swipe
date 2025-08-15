@@ -12,7 +12,6 @@ export default function AllProjectsLayout() {
             fontSize: 25,
             fontFamily: "sans-serif",
           },
-          headerTransparent: true,
         }}
       />
     </Stack>
