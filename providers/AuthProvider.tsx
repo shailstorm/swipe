@@ -1,18 +1,25 @@
-import { supabase } from '@/lib/supabase';
-import { Session } from '@supabase/supabase-js';
+import { supabase } from "@/lib/supabase";
+import { Session } from "@supabase/supabase-js";
 import { router } from "expo-router";
-import { createContext, ReactNode, useCallback, useContext, useEffect, useState } from 'react';
+import {
+  createContext,
+  ReactNode,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 const AuthContext = createContext<{
   signIn: () => void;
-  signOut: () => void
+  signOut: () => void;
   session: Session | null;
-  isLoading: boolean
+  isLoading: boolean;
 }>({
   signIn: () => null,
   signOut: () => null,
   session: null,
-  isLoading: true
+  isLoading: true,
 });
 
 // Access the context as a hook
@@ -20,7 +27,11 @@ export function useAuthSession() {
   return useContext(AuthContext);
 }
 
-export default function AuthProvider  ({children}:{children: ReactNode}): ReactNode {
+export default function AuthProvider({
+  children,
+}: {
+  children: ReactNode;
+}): ReactNode {
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -32,7 +43,9 @@ export default function AuthProvider  ({children}:{children: ReactNode}): ReactN
     });
 
     // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
       setIsLoading(false);
     });
@@ -41,12 +54,12 @@ export default function AuthProvider  ({children}:{children: ReactNode}): ReactN
   }, []);
 
   const signIn = useCallback(() => {
-    router.replace('/(tabs)/Feed');
+    router.replace("/(tabs)/feed");
   }, []);
 
   const signOut = useCallback(async () => {
     await supabase.auth.signOut();
-    router.replace('/Auth');
+    router.replace("/Auth");
   }, []);
 
   return (
@@ -55,10 +68,10 @@ export default function AuthProvider  ({children}:{children: ReactNode}): ReactN
         signIn,
         signOut,
         session,
-        isLoading
+        isLoading,
       }}
     >
       {children}
     </AuthContext.Provider>
   );
-};
+}

@@ -1,8 +1,8 @@
+import { useAuthSession } from "@/providers/AuthProvider";
 import React, { useState } from "react";
 import { Alert, AppState, StyleSheet, View } from "react-native";
 import { Button, TextInput } from "react-native-paper";
 import { supabase } from "../lib/supabase";
-import { useAuthSession } from "@/providers/AuthProvider";
 
 // Tells Supabase Auth to continuously refresh the session automatically if
 // the app is in the foreground. When this is added, you will continue to receive
@@ -41,8 +41,10 @@ export default function Auth() {
       password: password,
     });
     if (error) Alert.alert(error.message);
-    if (!session)
-      Alert.alert("Please check your inbox for email verification!");
+    if (session) signIn();
+    // i turned off the email verification feature and direct user straight to app after signup
+    // if (!session)
+    //   Alert.alert("Please check your inbox for email verification!");
     setLoading(false);
   }
   return (
