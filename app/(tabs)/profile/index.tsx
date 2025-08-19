@@ -1,3 +1,4 @@
+import { ProjectRow } from "@/components/ProjectRow";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { getUserProjects } from "@/data/queries";
@@ -22,7 +23,18 @@ export default function ProfileScreen() {
     if (isPending) return <ThemedText>Loading...</ThemedText>;
     if (isError) return <ThemedText>Error: {error.message}</ThemedText>;
 
-    return <ThemedText>my project count: {data.length}</ThemedText>;
+    return (
+      <>
+        <ThemedText>my project count: {data.length}</ThemedText>
+        {data.map((project) => (
+          <ProjectRow
+            key={project.id}
+            title={project.title}
+            description={project.description}
+          ></ProjectRow>
+        ))}
+      </>
+    );
   };
 
   return (

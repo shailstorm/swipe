@@ -1,3 +1,4 @@
+import { ProjectRow } from "@/components/ProjectRow";
 import { ThemedText } from "@/components/ThemedText";
 import { getAllProjects } from "@/data/queries";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -18,7 +19,11 @@ export default function AllProjectsScreen() {
     <View className="flex-1 justify-center bg-white">
       <ThemedText>total projects: {data.length}</ThemedText>
       {data.map((project) => (
-        <ThemedText key={project.id}>{project.title}</ThemedText>
+        <ProjectRow
+          key={project.id}
+          title={project.title}
+          description={project.description}
+        ></ProjectRow>
       ))}
     </View>
   );
