@@ -1,34 +1,23 @@
 import { ThemedText } from "@/components/ThemedText";
-import React, { useEffect, useState } from "react";
+import { getAllProjects } from "@/data/queries";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import React from "react";
 import { Text, View } from "react-native";
-import { supabase } from "../../../lib/supabase";
 
 export default function AllProjectsScreen() {
-  const [projects, setProjects] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<null | string>(null);
+  const queryClient = useQueryClient();
+  const { isPending, isError, data, error } = useQuery({
+    queryKey: ["allProjects"],
+    queryFn: getAllProjects,
+  });
 
-  useEffect(() => {
-    const fetchProjects = async () => {
-      const { data, error } = await supabase.from("projects").select("*");
-      if (error) {
-        setError(error.message);
-      } else {
-        setProjects(data ?? []);
-      }
-      setLoading(false);
-    };
-
-    fetchProjects();
-  }, []);
-
-  if (loading) return <Text>Loading...</Text>;
-  if (error) return <Text>Error: {error}</Text>;
+  if (isPending) return <Text>Loading...</Text>;
+  if (isError) return <Text>Error: {error.message}</Text>;
 
   return (
     <View className="flex-1 justify-center bg-white">
-      <ThemedText>total projects: {projects.length}</ThemedText>
-      {projects.map((project) => (
+      <ThemedText>total projects: {data.length}</ThemedText>
+      {data.map((project) => (
         <ThemedText key={project.id}>{project.title}</ThemedText>
       ))}
     </View>
