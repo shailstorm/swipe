@@ -2,6 +2,9 @@ import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { createProject } from "@/data/mutations";
 import { useAuthSession } from "@/providers/AuthProvider";
+import DateTimePicker, {
+  DateTimePickerEvent,
+} from "@react-native-community/datetimepicker";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { router } from "expo-router";
 import React, { useState } from "react";
@@ -12,16 +15,25 @@ export default function NewProject() {
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [expireDate, setExpireDate] = useState(new Date());
 
   const { session } = useAuthSession();
-  const user_id = session?.user?.id;
+  const userId = session?.user?.id;
+
+  const onChange = (
+    event: DateTimePickerEvent,
+    selectedDate: Date | undefined
+  ) => {
+    const currentDate = selectedDate;
+    if (currentDate) setExpireDate(currentDate);
+  };
 
   const mutation = useMutation({
-    mutationFn: () => createProject({ title, description, user_id }),
+    mutationFn: () => createProject({ title, description, userId, expireDate }),
     onSuccess: () => {
       // refresh query results to include this newly created project when we reroute back to profile tab
       queryClient.invalidateQueries({
-        queryKey: ["myProjects", user_id],
+        queryKey: ["myProjects", userId],
       });
       router.replace("/(tabs)/profile");
     },
@@ -39,11 +51,18 @@ export default function NewProject() {
       <TextInput onChangeText={setTitle} value={title} />
       <ThemedText>Description</ThemedText>
       <TextInput onChangeText={setDescription} value={description} />
+      <ThemedText>Expires At</ThemedText>
+      <DateTimePicker
+        testID="dateTimePicker"
+        value={expireDate}
+        is24Hour={true}
+        onChange={onChange}
+      />
       <Button title="Submit" onPress={handleSubmit} />
-      {mutation.isPending ? <ThemedText>Adding...</ThemedText> : null}
-      {mutation.isError ? (
-        <ThemedText>`error: ${mutation.error.message}`</ThemedText>
-      ) : null}
+      {mutation.isPending && <ThemedText>Adding...</ThemedText>}
+      {mutation.isError && (
+        <ThemedText>Error: {mutation.error.message}</ThemedText>
+      )}
     </ThemedView>
   );
 }
