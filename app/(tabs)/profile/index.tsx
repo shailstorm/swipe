@@ -10,13 +10,13 @@ import { Button } from "react-native-paper";
 
 export default function ProfileScreen() {
   const { signOut, isLoading, session } = useAuthSession();
-  const user_id = session?.user.id;
+  const userId = session?.user.id;
 
   const queryClient = useQueryClient();
   const { isPending, isError, data, error } = useQuery({
-    queryKey: ["myProjects", user_id],
-    queryFn: () => getUserProjects(user_id),
-    enabled: !!user_id,
+    queryKey: ["myProjects", userId],
+    queryFn: () => getUserProjects(userId),
+    enabled: !!userId,
   });
 
   const MyProjectsList = () => {
